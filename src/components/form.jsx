@@ -1,43 +1,41 @@
-import { int2romanFast } from "../../src/roman";
 import { useState } from "react";
+import { int2romanFast, roman2int } from "../../src/roman";
+
+const initValues = {
+  int: 0,
+  roman: "",
+};
 
 export default function Form() {
-  const [labelInput1, setLabelInput1] = useState("Integer");
-  const [labelInput2, setLabelInput2] = useState("Roman");
-  const [typeInput1, setTypeInput1] = useState("number");
-  const [typeInput2, setTypeInput2] = useState("text");
-  const [isRoman2int, setIsRoman2int] = useState(true);
-  const [valueInput1, setValueInput1] = useState(0);
-  const [valueInput2, setValueInput2] = useState(0);
+  const [input, setInput] = useState({ ...initValues });
+  const [inputResult, setInputResult] = useState("");
+  const [isRoman2int, setIsRoman2int] = useState(false);
 
   //change the conversion
   function handleClick() {
-    if (isRoman2int) {
-      setLabelInput1("Roman");
-      setLabelInput2("Integer");
-      setIsRoman2int(false);
-      setTypeInput1("text");
-      setTypeInput2("number");
-    } else {
-      setLabelInput1("Integer");
-      setLabelInput2("Roman");
-      setIsRoman2int(true);
-      setTypeInput2("text");
-      setTypeInput1("number");
-    }
-    
-    setValueInput1(valueInput2);
-    setValueInput2(valueInput1);
-    console.log(isRoman2int);
+    console.log(isRoman2int, input);
+    setIsRoman2int(!isRoman2int);
+    setInput(initValues);
+    setInputResult("");
   }
+
   function handleChangeNumber(event) {
-    setValueInput1(event.target.value);
-    setValueInput2(int2romanFast(event.target.value));
+    try {
+      if (isRoman2int) {
+        setInput((prev) => ({ ...prev, roman: event.target.value }));
+        setInputResult(roman2int(event.target.value));
+      } else {
+        setInput((prev) => ({ ...prev, int: event.target.value }));
+        setInputResult(int2romanFast(event.target.value));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <>
-      <h5 className="mt-4">roman conversor</h5>
+      <h5 className="mt-4">Roman Conversor</h5>
 
       <button className="btn btn-secondary" type="button">
         <i className="bi bi-arrow-left-right" onClick={handleClick}></i>
@@ -45,26 +43,19 @@ export default function Form() {
       <br />
       <div className="row">
         <div className="">
-          <label htmlFor="input1">{labelInput1}</label>
+          <label htmlFor="input1">{isRoman2int ? "Roman" : "Integer"}</label>
           <input
-            className="mt-2"
             id="input1"
-            type={typeInput1}
-            placeholder={labelInput1}
-            value={valueInput1}
+            className="mt-2"
+            type={isRoman2int ? "text" : "number"}
+            value={isRoman2int ? input.roman : input.int}
             onChange={handleChangeNumber}
           />
         </div>
         =
         <div>
-          <label htmlFor="input2">{labelInput2}</label>
-          <input
-            id="input2"
-            type={typeInput2}
-            placeholder={labelInput2}
-            disabled={true}
-            value={valueInput2}
-          />
+          <label htmlFor="input2">{!isRoman2int ? "Roman" : "Integer"}</label>
+          <input id="input2" disabled={true} value={inputResult} />
         </div>
       </div>
     </>
