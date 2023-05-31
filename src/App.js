@@ -16,12 +16,12 @@ function App() {
           </div>
         </div>
         <div className="mt-4">
-          <h7 className="my-3">
+          <h6 className="my-3">
             <span>Developed by: </span>
             <a href="https://github.com/EllenSouza">Ellen Almeida</a>
             <span> and </span>
             <a href="https://github.com/keviinsna">Kevin Sena</a>
-          </h7>
+          </h6>
         </div>
       </div>
     </div>

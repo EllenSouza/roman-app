@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { int2romanFast, roman2int, validateRoman } from "../../src/roman";
 
 const initValues = {
@@ -10,23 +10,29 @@ export default function Form() {
   const [input, setInput] = useState({ ...initValues });
   const [isRoman2int, setIsRoman2int] = useState(false);
 
+  useEffect(() => {
+    const storage = window.localStorage.getItem("roman-app");
+    if (storage) {
+      const romanapp = JSON.parse(storage);
+      setInput(romanapp);
+    }
+  }, []);
+
   function handleChangeInput(event) {
+    let result = { ...initValues };
     if (isRoman2int) {
       const inputResult =
         validateRoman(event.target.value).length == 0
           ? roman2int(event.target.value)
           : 0;
-      setInput((prev) => ({
-        ...prev,
-        roman: event.target.value.toUpperCase(),
-        int: inputResult,
-      }));
-    } else
-      setInput((prev) => ({
-        ...prev,
-        int: event.target.value,
-        roman: int2romanFast(event.target.value),
-      }));
+      result.int = inputResult;
+      result.roman = event.target.value.toUpperCase();
+    } else {
+      result.int = event.target.value;
+      result.roman = int2romanFast(event.target.value);
+    }
+    setInput(result);
+    window.localStorage.setItem("roman-app", JSON.stringify(result));
   }
 
   return (
