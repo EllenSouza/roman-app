@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { int2romanFast, roman2int, validateRoman } from "../../src/roman";
 
 const initValues = {
-  int: 0,
-  roman: "",
+  int: 1,
+  roman: "I",
 };
 
 export default function Form() {
@@ -38,7 +38,7 @@ export default function Form() {
   return (
     <>
       <button
-        className="btn btn-secondary"
+        className="btn btn-warning mt-4"
         type="button"
         style={{ width: "4rem" }}
         onClick={() => setIsRoman2int(!isRoman2int)}
@@ -51,7 +51,7 @@ export default function Form() {
           <input
             id="input1"
             className="mt-2"
-            min={0}
+            min={1}
             type={isRoman2int ? "text" : "number"}
             value={isRoman2int ? input.roman : input.int}
             onChange={handleChangeInput}
@@ -69,6 +69,11 @@ export default function Form() {
           />
         </div>
       </div>
+      {isRoman2int && validateRoman(input.roman) && (
+        <div className="mt-3 text-danger">
+          Você não inseriu um valor romano válido
+        </div>
+      )}
     </>
   );
 }
